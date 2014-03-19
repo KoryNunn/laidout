@@ -1,6 +1,6 @@
 {
   "name": "laidout",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Call a callback when an element has been laid out with css",
   "main": "index.js",
   "scripts": {
