@@ -1,7 +1,7 @@
 {
   "name": "laidout",
   "version": "0.0.0",
-  "description":"Call a callback when an element has been laid out with css",
+  "description": "Call a callback when an element has been laid out with css",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/KoryNunn/laidout/issues"
   },
-  "homepage": "https://github.com/KoryNunn/laidout"
+  "homepage": "https://github.com/KoryNunn/laidout",
+  "devDependencies": {
+    "crel": "^1.1.1"
+  }
 }

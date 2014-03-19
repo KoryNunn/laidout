@@ -14,7 +14,7 @@ function checkElement(element){
 
 module.exports = function laidout(element, callback){
     if(checkElement(element)){
-        return true;
+        return callback();
     }
 
     var recheckElement = function(){
