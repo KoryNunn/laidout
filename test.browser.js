@@ -1,10 +1,13 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-function checkElement(element){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+function checkElement(element, checkVisibility){
     if(!element){
         return false;
     }
-    var parentNode = element.parentNode;
+    var parentNode = element;
     while(parentNode){
+        if(checkVisibility && parentNode.style && parentNode.style.display === 'none'){
+            return false;
+        }
         if(parentNode === element.ownerDocument){
             return true;
         }
@@ -13,18 +16,29 @@ function checkElement(element){
     return false;
 }
 
-module.exports = function laidout(element, callback){
-    if(checkElement(element)){
+module.exports = function laidout(element, checkVisibility, callback){
+    if(arguments.length < 3){
+        callback = checkVisibility;
+        checkVisibility = false;
+    }
+
+    if(checkElement(element, checkVisibility)){
         return callback();
     }
 
     var recheckElement = function(){
-            if(checkElement(element)){
+            if(checkElement(element, checkVisibility)){
                 document.removeEventListener('DOMNodeInserted', recheckElement);
                 callback();
+                return;
+            }
+
+            if(checkVisibility){
+                requestAnimationFrame(recheckElement);
             }
         };
 
+    recheckElement();
     document.addEventListener('DOMNodeInserted', recheckElement);
 };
 },{}],2:[function(require,module,exports){
@@ -165,17 +179,19 @@ var laidout = require('./'),
 
 var element1 = crel('div', {class:'thing'}),
     element2 = crel('div', {class:'thing'});
-    add3 = crel('button', 'add element 3');
-    element3 = crel('div', {class:'thing'});
+    element3 = crel('div', {class:'thing', style:'display:none;'});
+    add4 = crel('button', 'add element 4');
+    element4 = crel('div', {class:'thing'});
 
 console.log(
-
     'height: ' + element1.clientHeight + '\n' +
     'width: ' + element1.clientWidth,
     'height: ' + element2.clientHeight + '\n' +
     'width: ' + element2.clientWidth,
     'height: ' + element3.clientHeight + '\n' +
-    'width: ' + element3.clientWidth
+    'width: ' + element3.clientWidth,
+    'height: ' + element4.clientHeight + '\n' +
+    'width: ' + element4.clientWidth
     );
 
 
@@ -189,22 +205,33 @@ laidout(element2, function(){
     'width: ' + element2.clientWidth;
 });
 
-laidout(element3, function(){
+laidout(element3, true, function(){
     element3.textContent =
     'height: ' + element3.clientHeight + '\n' +
     'width: ' + element3.clientWidth;
+});
+
+laidout(element4, function(){
+    element4.textContent =
+    'height: ' + element4.clientHeight + '\n' +
+    'width: ' + element4.clientWidth;
 });
 
 window.onload = function(){
     crel(document.body,
         element1,
         element2,
-        add3
+        element3,
+        add4
     );
 
-    add3.addEventListener('click', function(){
+    setTimeout(function(){
+        element3.style.display = null;
+    }, 1000);
+
+    add4.addEventListener('click', function(){
         crel(document.body,
-            element3
+            element4
         );
     });
 
@@ -216,4 +243,4 @@ window.onload = function(){
         'width: ' + alreadyInDom.clientWidth;
     });
 };
-},{"./":1,"crel":2}]},{},[3])
+},{"./":1,"crel":2}]},{},[3]);

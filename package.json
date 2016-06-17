@@ -4,7 +4,8 @@
   "description": "Call a callback when an element has been laid out with css",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "watch": "watchify test.js -o test.browser.js",
+    "test": "browserify test.js > test.browser.js; google-chrome index.html"
   },
   "author": "",
   "license": "ISC",

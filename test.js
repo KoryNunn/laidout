@@ -3,17 +3,19 @@ var laidout = require('./'),
 
 var element1 = crel('div', {class:'thing'}),
     element2 = crel('div', {class:'thing'});
-    add3 = crel('button', 'add element 3');
-    element3 = crel('div', {class:'thing'});
+    element3 = crel('div', {class:'thing', style:'display:none;'});
+    add4 = crel('button', 'add element 4');
+    element4 = crel('div', {class:'thing'});
 
 console.log(
-
     'height: ' + element1.clientHeight + '\n' +
     'width: ' + element1.clientWidth,
     'height: ' + element2.clientHeight + '\n' +
     'width: ' + element2.clientWidth,
     'height: ' + element3.clientHeight + '\n' +
-    'width: ' + element3.clientWidth
+    'width: ' + element3.clientWidth,
+    'height: ' + element4.clientHeight + '\n' +
+    'width: ' + element4.clientWidth
     );
 
 
@@ -27,22 +29,33 @@ laidout(element2, function(){
     'width: ' + element2.clientWidth;
 });
 
-laidout(element3, function(){
+laidout(element3, true, function(){
     element3.textContent =
     'height: ' + element3.clientHeight + '\n' +
     'width: ' + element3.clientWidth;
+});
+
+laidout(element4, function(){
+    element4.textContent =
+    'height: ' + element4.clientHeight + '\n' +
+    'width: ' + element4.clientWidth;
 });
 
 window.onload = function(){
     crel(document.body,
         element1,
         element2,
-        add3
+        element3,
+        add4
     );
 
-    add3.addEventListener('click', function(){
+    setTimeout(function(){
+        element3.style.display = null;
+    }, 1000);
+
+    add4.addEventListener('click', function(){
         crel(document.body,
-            element3
+            element4
         );
     });
 
